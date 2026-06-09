@@ -65,3 +65,72 @@
 1. 确保本地已正确安装并初始化 Git LFS：
    ```bash
    git lfs install
+# EndField_Render - UE5 Advanced Cel-Shading Character Rendering
+
+![Screenshot 1](./Docs/Chen_01.png)
+![Screenshot 2](./Docs/Chen_02.png)
+
+This is a technical showcase project featuring anime-style cel-shading developed in **Unreal Engine 5**. 
+
+This project explores how to break the limitations of traditional PBR in a real-time rendering environment to build a highly modular and precisely controllable character material pipeline. Through customized shader logic, the project maintains extremely high visual fidelity while accommodating the performance demands of high-action games like ARPGs and ensuring efficient pipeline hot-reloading.
+
+---
+
+## 🚀 Rendering Features
+
+### 1. Modular Character Shading Pipeline
+The project discards bloated all-in-one master materials in favor of a highly decoupled Master Material & Instances architecture. Custom shading logic was developed for different physical parts of the character:
+* **`M_Common_Face` (Advanced Face Shading)**: To solve the "dead angle" issue of anime-style facial shadows, customized face shadow maps and normal weight controls were introduced. Built-in `Nose_HighLight` and `Nose_Matcap` (lip/local matcap) offset parameters ensure facial features remain three-dimensional and clean under any lighting condition.
+* **`M_Common_Hair` (Anisotropic Hair Highlight)**: Implemented a cartoon hair rendering solution (`KK_Spe`) based on a variation of the Kajiya-Kay model. It supports custom Ramp maps (color step mapping) and anisotropic offsets (Shift UV), perfectly recreating the iconic "angel ring" dynamic highlight effect seen in anime.
+* **`M_Common_Cloth` (NPR & PBR Hybrid Fabric)**: For clothing and hard-surface materials, it innovatively blends GGX physical specular with Matcap. Through the dual control of `Cloth_Metallic` and `Cloth_Rim`, it retains the physical texture of metal/leather while maintaining the consistency of the overall cel-shaded style.
+* **`M_Common_Eye` & `EyeShadow` (Eye Close-up Optimization)**: Utilizes a multi-layer mask (EyeMask) to independently control pupil highlights and base emission intensity, equipped with a separate EyeShadow/HairShadow material to prevent messy shadow clipping.
+
+### 2. Advanced Edge & Rim Light Control
+* **Independent Normal Blending Engine**: Independent sliders for `CameraNormal_Strength` and `LightNormal_Strength` are exposed in each part's material, granting artists maximum freedom to fine-tune lighting and shadows.
+* **Adaptive Rim Light**: Through `Rim_Offset` and `Rim_Smooth` parameters, the rim light smoothly transitions based on the angle between the character and the light source. The clothing material also supports a custom highlight normal mode (`Rim_HighLight_Normal_Mode`) to enhance the volumetric feel of lit surfaces.
+
+### 3. Production-Ready Workflow
+* **Parametrized Global Control**: All core visual elements (e.g., AO color, base color tint, specular intensity) are exposed as Material Instance (MI) parameters.
+* **Performance Friendly**: The material hierarchy is clean, discarding expensive real-time ray-traced shadows in favor of optimized Step functions and Ramp mapping to calculate terminators, making it highly optimized for high-framerate game scenes.
+
+---
+
+## 📸 Material Architecture
+
+| Hair Shading / KK_Spe | Face & Nose Specular |
+| :---: | :---: |
+| ![Hair_KK](./Docs/Hair_KK.png) | ![Face](./Docs/Face.png) |
+| ![Hair_Matcap](./Docs/Hair_Matcap.png)| |
+
+| Cloth NPR + PBR | Skin & AO |
+| :---: | :---: |
+| ![Cloth_01](./Docs/Cloth_01.png) | ![Skin](./Docs/Skin.png) |
+| ![Cloth_02](./Docs/Cloth_01.png) | |
+
+---
+
+## 🎨 Material Instances Showcase
+
+| Hair | Face |
+| :---: | :---: |
+| ![Hair](./Docs/MI_Chen_Hair.png) | ![Face](./Docs/MI_Chen_Face.png) |
+| **Cloth** | **Skin** |
+| ![Cloth](./Docs/MI_Chen_Cloth.png) | ![Skin](./Docs/MI_Body_Skin.png) |
+
+---
+
+## 🛠️ Environment
+
+* **Engine Version**: Unreal Engine 5.7.4
+* **Rendering Pipeline**: Deferred Rendering + Custom Post-Process
+* **Core Architecture**: Material Instance-based pure Blueprint/Asset-driven workflow
+
+---
+
+## 📦 Setup Instructions
+
+This project contains high-fidelity models and texture assets and has **Git LFS (Large File Storage)** enabled.
+
+1. Ensure Git LFS is properly installed and initialized locally:
+   ```bash
+   git lfs install
